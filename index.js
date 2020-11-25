@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const exphbs = require('express-handlebars');
-const in_routes = require('./routes/index');
+const book_routes = require('./routes/books');
 
 const PORT = process.env.PORT || 3000;
 
@@ -13,11 +14,16 @@ const hbs = exphbs.create({
   extname: 'hbs'
 });
 
+// Render hbs chunks
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', 'views');
 
-app.use(in_routes)
+// Add midleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(book_routes);
 
 
 async function start() {
